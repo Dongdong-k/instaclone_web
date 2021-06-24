@@ -1,5 +1,6 @@
 // import styled, { ThemeProvider } from "styled-components";
 // import { ourTheme } from "./styles";
+import { useState } from "react";
 import {
   HashRouter as Router,
   Redirect,
@@ -16,7 +17,7 @@ import NotFound from "./screens/NotFound";
 // `;
 
 function App() {
-  const isloggedIn = true;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div>
       {/* 라우터 설정 */}
@@ -27,7 +28,11 @@ function App() {
         <Switch>
           {/* exact : path가 완전히 동일할 경우에만 실행 */}
           <Route exact path="/">
-            {isloggedIn ? <Home /> : <Login />}
+            {isLoggedIn ? (
+              <Home setIsLoggedIn={setIsLoggedIn} />
+            ) : (
+              <Login setIsLoggedIn={setIsLoggedIn} />
+            )}
           </Route>
           {/* 없는 페이지 주소 입력시 아래와 같이 출력, 마지막에 입력하기 */}
           <Route>
