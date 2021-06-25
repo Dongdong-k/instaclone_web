@@ -2,20 +2,34 @@
 // import { ourTheme } from "./styles";
 import { useReactiveVar } from "@apollo/client";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
-import { isLoggedInVar } from "./apollo";
+import styled, { ThemeProvider } from "styled-components";
+import { darkModeVar, isLoggedInVar } from "./apollo";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
+import { darkTheme, lightTheme, ourTheme } from "./styles";
 
 // const Container = styled.div`
 //   background-color: ${(prop) => prop.theme.bgColor};
 //   color: ${(prop) => prop.theme.fontColor};
 // `;
 
+interface IContainerProp {
+  floating: true;
+}
+
+const Container = styled.div<IContainerProp>`
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.fontColor};
+  box-shadow: ${(props) => props.theme.borderColor};
+`;
+
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
+  const darkMode = useReactiveVar(darkModeVar);
   return (
-    <div>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      {/* <Container floating={true}> */}
       {/* 라우터 설정 */}
       <Router>
         {/* Switch : 하나의 라우터만 rendering */}
@@ -35,7 +49,8 @@ function App() {
           </Route>
         </Switch>
       </Router>
-    </div>
+      {/* </Container> */}
+    </ThemeProvider>
   );
 }
 
