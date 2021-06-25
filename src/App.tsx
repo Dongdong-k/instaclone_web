@@ -1,12 +1,8 @@
 // import styled, { ThemeProvider } from "styled-components";
 // import { ourTheme } from "./styles";
-import { useState } from "react";
-import {
-  HashRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { useReactiveVar } from "@apollo/client";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { isLoggedInVar } from "./apollo";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
@@ -17,7 +13,7 @@ import NotFound from "./screens/NotFound";
 // `;
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
   return (
     <div>
       {/* 라우터 설정 */}
@@ -28,11 +24,7 @@ function App() {
         <Switch>
           {/* exact : path가 완전히 동일할 경우에만 실행 */}
           <Route exact path="/">
-            {isLoggedIn ? (
-              <Home setIsLoggedIn={setIsLoggedIn} />
-            ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} />
-            )}
+            {isLoggedIn ? <Home /> : <Login />}
           </Route>
           {/* 없는 페이지 주소 입력시 아래와 같이 출력, 마지막에 입력하기 */}
           <Route>
