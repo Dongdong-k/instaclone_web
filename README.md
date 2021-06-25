@@ -3,6 +3,6 @@
 ## Setup Meaning
 
 - [x] Router
-- [ ] Authentication
-- [ ] Arch. - file/component tree
-- [ ] styles - font, color, dark mode etc...
+- [x] Authentication
+- [x] Arch. - file/component tree
+- [x] styles - font, color, dark mode etc...

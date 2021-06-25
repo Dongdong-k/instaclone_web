@@ -1,4 +1,5 @@
-import { DefaultTheme } from "styled-components";
+import { createGlobalStyle, DefaultTheme } from "styled-components";
+import reset from "styled-reset";
 
 export const ourTheme: DefaultTheme = {
   bgColor: "Blue",
@@ -16,3 +17,10 @@ export const lightTheme: DefaultTheme = {
   fontColor: "black",
   borderColor: "black",
 };
+
+export const GlobalTheme = createGlobalStyle`
+  ${reset}
+  body{
+     background-color: ${(props) => props.theme.bgColor};
+   }
+`;

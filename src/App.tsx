@@ -7,7 +7,7 @@ import { darkModeVar, isLoggedInVar } from "./apollo";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
-import { darkTheme, lightTheme, ourTheme } from "./styles";
+import { darkTheme, GlobalTheme, lightTheme, ourTheme } from "./styles";
 
 // const Container = styled.div`
 //   background-color: ${(prop) => prop.theme.bgColor};
@@ -29,6 +29,7 @@ function App() {
   const darkMode = useReactiveVar(darkModeVar);
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      <GlobalTheme />
       {/* <Container floating={true}> */}
       {/* 라우터 설정 */}
       <Router>
