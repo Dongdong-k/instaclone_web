@@ -20,7 +20,19 @@ export const lightTheme: DefaultTheme = {
 
 export const GlobalTheme = createGlobalStyle`
   ${reset}
+  *{
+    box-sizing: border-box;
+  }
+  input{
+    all:unset
+  }
   body{
-     background-color: ${(props) => props.theme.bgColor};
+    /* Theme 내부에 위치시 theme - props 이용 가능 */
+     background-color: #FAFAFA;
+     font-size: 14px;
+     font-family: 'Roboto Mono', monospace;
+   }
+   a {
+    text-decoration: none;
    }
 `;
