@@ -13,9 +13,8 @@ export const darkTheme: DefaultTheme = {
   borderColor: "black",
 };
 export const lightTheme: DefaultTheme = {
-  bgColor: "lightgreen",
-  fontColor: "black",
-  borderColor: "black",
+  accent: "#0095f6",
+  borderColor: "rgb(219,219,219)",
 };
 
 export const GlobalTheme = createGlobalStyle`
@@ -24,15 +23,16 @@ export const GlobalTheme = createGlobalStyle`
     box-sizing: border-box;
   }
   input{
-    all:unset
+    all:unset /*all property delete*/
   }
   body{
     /* Theme 내부에 위치시 theme - props 이용 가능 */
      background-color: #FAFAFA;
      font-size: 14px;
-     font-family: 'Roboto Mono', monospace;
+     font-family: 'Open Sans', sans-serif;
+     color: rgb(38, 38, 38);
    }
    a {
-    text-decoration: none;
+    text-decoration: none; /* link underline delete */
    }
 `;

@@ -7,7 +7,9 @@ import { darkModeVar, isLoggedInVar } from "./apollo";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
+import SignUp from "./screens/SignUp";
 import { darkTheme, GlobalTheme, lightTheme, ourTheme } from "./styles";
+import routes from "./routes";
 
 // const Container = styled.div`
 //   background-color: ${(prop) => prop.theme.bgColor};
@@ -38,9 +40,15 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           {/* exact : path가 완전히 동일할 경우에만 실행 */}
-          <Route exact path="/">
+          <Route exact path={routes.home}>
             {isLoggedIn ? <Home /> : <Login />}
           </Route>
+          {/* 로그인 된 경우에는 가입 페이지 안보이게 하기 */}
+          {!isLoggedIn ? (
+            <Route exact path={routes.signUp}>
+              <SignUp />
+            </Route>
+          ) : null}
           {/* 없는 페이지 주소 입력시 아래와 같이 출력, 마지막에 입력하기 */}
           <Route>
             {/* 1안) 404 Not Found 페이지 연결하기 */}
