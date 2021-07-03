@@ -22,13 +22,17 @@ const FacebookLogin = styled.div`
   }
 `;
 
+const IconContainer = styled.div`
+  margin-bottom: 20px;
+`;
+
 const Login = () => {
   return (
     <AuthLayout>
       <FormBox>
-        <div>
+        <IconContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
-        </div>
+        </IconContainer>
         <form>
           <Input type="text" placeholder="User Name" />
           <Input type="password" placeholder="Password" />

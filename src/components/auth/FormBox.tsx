@@ -9,7 +9,7 @@ const SFormBox = styled(BaseBox)`
   padding: 35px 40px 25px 40px;
   margin-bottom: 10px;
   form {
-    margin-top: 35px;
+    /* margin-top: 35px; */
     width: 100%;
     display: flex;
     justify-content: center;
