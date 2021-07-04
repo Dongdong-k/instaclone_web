@@ -1,17 +1,23 @@
 import styled from "styled-components";
 
-const Input = styled.input`
-  border: none;
+interface IForm {
+  hasError?: boolean;
+}
+
+const Input = styled.input<IForm>`
   width: 100%;
   padding: 10px 5px;
   border-radius: 3px;
   background-color: #fafafa;
-  border: 0.5px solid ${(props) => props.theme.borderColor};
+  border: 0.5px solid
+    ${(props) => (props.hasError ? "tomato" : props.theme.borderColor)};
   margin-top: 5px;
   box-sizing: border-box;
   &::placeholder {
     font-size: 12px;
-    color: black;
+  }
+  &:focus {
+    border-color: rgb(38, 38, 38);
   }
 `;
 
