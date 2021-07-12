@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { darkModeVar } from "../apollo";
+import { darkModeVar, logUserOut } from "../apollo";
+import PageTitle from "../components/PageTitle";
 
 const Title = styled.h1`
   color: ${(props) => props.theme.fontColor};
@@ -8,9 +9,9 @@ const Title = styled.h1`
 const Home = () => {
   return (
     <div>
-      <Title>Home</Title>
-      <button onClick={() => darkModeVar(true)}>To Dark</button>
-      <button onClick={() => darkModeVar(false)}>To Light</button>
+      <PageTitle title="Home" />
+      <h1>Welcome, We did it!!</h1>
+      <button onClick={() => logUserOut()}>Log out now!</button>
     </div>
   );
 };

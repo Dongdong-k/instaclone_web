@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import * as React from "react";
 import { FormError } from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
+import { logUserIn } from "../apollo";
 
 // 스타일 상속받아 활용하기
 
@@ -52,6 +53,7 @@ const Login = () => {
     formState: { errors, isValid },
     getValues,
     setError,
+    clearErrors,
   } = useForm({ mode: "onChange" });
 
   // mutation 결과값
@@ -62,9 +64,14 @@ const Login = () => {
       login: { ok, error, token },
     } = data;
     if (!ok) {
-      setError("result", {
+      return setError("result", {
+        //name : "result"
         message: error,
       });
+    }
+    // 로그인 할 경우에만 token 저장하기
+    if (token) {
+      logUserIn(token);
     }
   };
   // 첫번째 요소 : Mutation 활성화 시키는 function
@@ -85,6 +92,11 @@ const Login = () => {
   };
   const onSubmitInvaild = (data: any) => console.log("Invalid", data);
 
+  const clearLoginError = () => {
+    clearErrors("result");
+  };
+  console.log(isValid);
+
   return (
     <AuthLayout>
       <PageTitle title="Log In" />
@@ -102,6 +114,7 @@ const Login = () => {
               },
             })}
             type="text"
+            onFocus={clearLoginError}
             placeholder="User Name"
             hasError={Boolean(errors?.username?.message)}
           />
@@ -109,6 +122,7 @@ const Login = () => {
           <Input
             {...register("password", { required: "Password is required" })}
             type="password"
+            onFocus={clearLoginError}
             placeholder="Password"
             hasError={Boolean(errors?.password?.message)}
           />
