@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
 
 const TOKEN = "token";
+const DARK_MODE = "DARK_MODE";
 
 // 새로고침시 로그아웃 되는것을 방지하기 위해 디폴드 값을 token 유무에 따라 결정되도록 설정
 export const isLoggedInVar = makeVar(Boolean(localStorage.getItem(TOKEN)));
@@ -19,7 +20,16 @@ export const logUserOut = (history: any) => {
   history.replace(); // history.location.state 초기화
 };
 
-export const darkModeVar = makeVar(false);
+export const darkModeVar = makeVar(Boolean(localStorage.getItem(DARK_MODE)));
+
+export const enableDarkMode = () => {
+  localStorage.setItem(DARK_MODE, "enabled");
+  darkModeVar(true);
+};
+export const disableDarkMode = () => {
+  localStorage.removeItem(DARK_MODE);
+  darkModeVar(false);
+};
 
 // 백엔드와 프런트엔드 연결하기
 export const client = new ApolloClient({
