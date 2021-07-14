@@ -11,6 +11,8 @@ import SignUp from "./screens/SignUp";
 import { darkTheme, GlobalTheme, lightTheme } from "./styles";
 import routes from "./routes";
 import { HelmetProvider } from "react-helmet-async";
+import Header from "./components/Header";
+import Layout from "./components/Layout";
 
 // const Container = styled.div`
 //   background-color: ${(prop) => prop.theme.bgColor};
@@ -44,7 +46,13 @@ function App() {
             <Switch>
               {/* exact : path가 완전히 동일할 경우에만 실행 */}
               <Route exact path={routes.home}>
-                {isLoggedIn ? <Home /> : <Login />}
+                {isLoggedIn ? (
+                  <Layout>
+                    <Home />
+                  </Layout>
+                ) : (
+                  <Login />
+                )}
               </Route>
               {/* 로그인 된 경우에는 가입 페이지 안보이게 하기 */}
               {!isLoggedIn ? (

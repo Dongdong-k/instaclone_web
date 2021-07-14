@@ -34,7 +34,7 @@ const AuthLayout = ({ children }: any) => {
         <DarkModeBtn
           onClick={() => (!darkMode ? enableDarkMode() : disableDarkMode())}
         >
-          <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
+          <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="2x" />
         </DarkModeBtn>
       </Footer>
     </Container>
