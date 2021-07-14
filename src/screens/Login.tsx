@@ -17,6 +17,7 @@ import * as React from "react";
 import { FormError } from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
+import { useLocation } from "react-router-dom";
 
 // 스타일 상속받아 활용하기
 
@@ -46,7 +47,17 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
+interface ReactHookState {
+  message: string;
+  username: string;
+  password: string;
+  result?: string;
+}
+
 const Login = () => {
+  const location = useLocation<ReactHookState>();
+  console.log("location : ", location);
+  // useLocation - state 값을 가져오기 위해서는 BrowserRouter 사용하기 (HashRouter 는 안됨)
   const {
     register,
     handleSubmit,
@@ -54,7 +65,13 @@ const Login = () => {
     getValues,
     setError,
     clearErrors,
-  } = useForm({ mode: "onChange" });
+  } = useForm<ReactHookState>({
+    mode: "onChange",
+    defaultValues: {
+      username: location?.state?.username || "",
+      password: location?.state?.password || "",
+    },
+  });
 
   // mutation 결과값
   // function 이지만 동시에 argu로 데이터 제공해줌
@@ -95,7 +112,6 @@ const Login = () => {
   const clearLoginError = () => {
     clearErrors("result");
   };
-  console.log(isValid);
 
   return (
     <AuthLayout>
@@ -104,6 +120,7 @@ const Login = () => {
         <IconContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </IconContainer>
+        <FormError message={location?.state?.message} />
         <form onSubmit={handleSubmit(onSubmitValid, onSubmitInvaild)}>
           <Input
             {...register("username", {

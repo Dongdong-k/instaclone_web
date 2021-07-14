@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// tag 내 임의의 props 설정시 타입 설정 필요
 interface IForm {
   hasError?: boolean;
 }

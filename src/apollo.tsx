@@ -12,9 +12,11 @@ export const logUserIn = (token: string) => {
 };
 
 // 로그아웃시 토큰 삭제하기
-export const logUserOut = () => {
+export const logUserOut = (history: any) => {
   localStorage.removeItem(TOKEN); // locatstorage에 토큰 삭제
-  isLoggedInVar(false); // 로그아웃 상태로 변경
+  // isLoggedInVar(false); // 로그아웃 상태로 변경 & 로그아웃시 state 살아 있음
+  window.location.reload(); // 홈페이지 새로고침
+  history.replace(); // history.location.state 초기화
 };
 
 export const darkModeVar = makeVar(false);

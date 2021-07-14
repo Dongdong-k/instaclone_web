@@ -51,7 +51,7 @@ const CREATE_ACCOUNT_MUTATION = gql`
 `;
 
 const SignUp = () => {
-  const history = useHistory();
+  const history = useHistory(); // 페이지 이동을 위한 API
   const {
     register,
     handleSubmit,
@@ -60,13 +60,21 @@ const SignUp = () => {
   } = useForm({ mode: "onChange" });
 
   const onCompleted = (data: any) => {
+    const { username, password } = getValues();
     const {
-      createAccount: { ok, error },
+      createAccount: { ok },
     } = data;
     if (!ok) {
       return;
     }
-    history.push(routes.home);
+
+    // 회원가입 성공시 로그인 페이지로 이동하기
+    // state 전송가능
+    history.push(routes.home, {
+      message: "Account created. Please Login",
+      password,
+      username,
+    });
   };
 
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
@@ -106,10 +114,6 @@ const SignUp = () => {
           <Input
             {...register("id", {
               required: "Phone or Email is required",
-              minLength: {
-                value: 10,
-                message: "ID shold be longer than 10",
-              },
             })}
             type="text"
             placeholder="Phone or Email"
@@ -119,10 +123,6 @@ const SignUp = () => {
           <Input
             {...register("firstname", {
               required: "First name is required",
-              minLength: {
-                value: 5,
-                message: "First name should be longer than 5",
-              },
             })}
             type="text"
             placeholder="First name"
@@ -137,10 +137,6 @@ const SignUp = () => {
           <Input
             {...register("username", {
               required: "User name is required",
-              minLength: {
-                value: 5,
-                message: "User name should be longer than 5",
-              },
             })}
             type="text"
             placeholder="User Name"

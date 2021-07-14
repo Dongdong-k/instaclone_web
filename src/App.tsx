@@ -1,7 +1,7 @@
 // import styled, { ThemeProvider } from "styled-components";
 // import { ourTheme } from "./styles";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { client, darkModeVar, isLoggedInVar } from "./apollo";
 import Home from "./screens/Home";
