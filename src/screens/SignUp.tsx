@@ -1,10 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
@@ -62,19 +60,22 @@ const SignUp = () => {
   const onCompleted = (data: any) => {
     const { username, password } = getValues();
     const {
-      createAccount: { ok },
+      createAccount: { ok, error },
     } = data;
     if (!ok) {
+      console.log(data);
+      localStorage.setItem("createAccount_error", error);
       return;
     }
-
     // 회원가입 성공시 로그인 페이지로 이동하기
     // state 전송가능
     history.push(routes.home, {
       message: "Account created. Please Login",
       password,
       username,
+      error,
     });
+    localStorage.removeItem("createAccount_error");
   };
 
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
@@ -110,6 +111,7 @@ const SignUp = () => {
           <Button type="submit" value="Log in with your Facebook" />
         </HeaderContainer>
         <Separator />
+        <FormError message={localStorage?.getItem("createAccount_error")} />
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("id", {

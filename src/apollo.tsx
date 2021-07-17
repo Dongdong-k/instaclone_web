@@ -1,6 +1,12 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  makeVar,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
-const TOKEN = "token";
+const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
 
 // 새로고침시 로그아웃 되는것을 방지하기 위해 디폴드 값을 token 유무에 따라 결정되도록 설정
@@ -13,14 +19,39 @@ export const logUserIn = (token: string) => {
 };
 
 // 로그아웃시 토큰 삭제하기
-export const logUserOut = (history: any) => {
+export const logUserOut = (history?: any) => {
   localStorage.removeItem(TOKEN); // locatstorage에 토큰 삭제
   // isLoggedInVar(false); // 로그아웃 상태로 변경 & 로그아웃시 state 살아 있음
   window.location.reload(); // 홈페이지 새로고침
-  history.replace(); // history.location.state 초기화
+  history?.replace(); // history.location.state 초기화
 };
 
-export const darkModeVar = makeVar(Boolean(localStorage.getItem(DARK_MODE)));
+// Sign Up 버튼 클릭시, 서버 creatAccount_error 내역 삭제
+export const DeleteCreateAccountError = () => {
+  localStorage.removeItem("createAccount_error");
+  console.log("createAccount error delete");
+};
+
+// client 연결 링크 생성하기
+const httpLink = createHttpLink({
+  // uri : GraphQl application 위치 알려주는 기능
+  uri: "http://localhost:4000/graphql/",
+});
+
+// authLink 생성 - token 값 받아서 header에 추가
+const authLink = setContext((_, { headers }) => {
+  console.log("excute authLink");
+  return {
+    headers: {
+      ...headers,
+      token: localStorage.getItem(TOKEN), // 백엔드에 설정된 token 이름으로 저장하기
+    },
+  };
+});
+
+/////////////////////////////////////////////////////////////////////////
+
+export const darkModeVar = makeVar(Boolean(localStorage.getItem(DARK_MODE))); // 새로고침시에도 값 존재시 다크모드 유지
 
 export const enableDarkMode = () => {
   localStorage.setItem(DARK_MODE, "enabled");
@@ -33,8 +64,7 @@ export const disableDarkMode = () => {
 
 // 백엔드와 프런트엔드 연결하기
 export const client = new ApolloClient({
-  // uri : GraphQl application 위치 알려주는 기능
-  uri: "http://localhost:4000/graphql/",
   // Cache : Apollo에서 가져온 정보를 기억
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });

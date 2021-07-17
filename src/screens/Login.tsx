@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import * as React from "react";
 import { FormError } from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
-import { logUserIn } from "../apollo";
+import { DeleteCreateAccountError, logUserIn } from "../apollo";
 import { useLocation } from "react-router-dom";
 
 // 스타일 상속받아 활용하기
@@ -161,6 +161,7 @@ const Login = () => {
         cta="Don't have an account?"
         link={routes.signUp}
         linkText="Sign Up"
+        onclick={() => DeleteCreateAccountError()}
       />
     </AuthLayout>
   );

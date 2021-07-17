@@ -12,11 +12,13 @@ const SBottomBox = styled(BaseBox)`
   }
 `;
 
-const BottomBox = ({ cta, link, linkText }: any) => {
+const BottomBox = ({ cta, link, linkText, onclick }: any) => {
   return (
     <SBottomBox>
       <span>{cta}</span>
-      <Link to={link}>{linkText}</Link>
+      <Link to={link} onClick={onclick}>
+        {linkText}
+      </Link>
     </SBottomBox>
   );
 };

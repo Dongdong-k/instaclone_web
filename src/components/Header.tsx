@@ -3,8 +3,11 @@ import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faCompass, faUser } from "@fortawesome/free-regular-svg-icons";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { isLoggedInVar } from "../apollo";
+import routes from "../routes";
+import useUser from "./hooks/useUser";
 
 const SHeader = styled.header`
   width: 100%;
@@ -30,8 +33,17 @@ const Icon = styled.span`
   margin-left: 15px;
 `;
 
+const Button = styled.span`
+  background-color: ${(props) => props.theme.accent};
+  border-radius: 4px;
+  padding: 5px 15px;
+  color: white;
+  font-weight: 600;
+`;
+
 const Header = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
+  const loggedInUser = useUser();
   return (
     <SHeader>
       <Wrapper>
@@ -40,6 +52,7 @@ const Header = () => {
         </Column>
         <Column>
           {isLoggedIn ? (
+            // 여러 요소들을 반환하고 싶으면 상위 tag <></> 로 감싸줘야함.(Component를 반환해야 함)
             <>
               <Icon>
                 <FontAwesomeIcon icon={faHome} size="lg" />
@@ -51,7 +64,11 @@ const Header = () => {
                 <FontAwesomeIcon icon={faUser} size="lg" />
               </Icon>
             </>
-          ) : null}
+          ) : (
+            <Link to={routes.home}>
+              <Button>Log In</Button>
+            </Link>
+          )}
         </Column>
       </Wrapper>
     </SHeader>

@@ -3,8 +3,9 @@ import reset from "styled-reset";
 
 export const darkTheme: DefaultTheme = {
   bgColor: "gray",
-  fontColor: "White",
+  fontColor: "rgb(38, 38, 38)",
   borderColor: "black",
+  accent: "#0095f6",
 };
 export const lightTheme: DefaultTheme = {
   bgColor: "#FAFAFA",
