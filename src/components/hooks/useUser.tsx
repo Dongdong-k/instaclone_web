@@ -16,7 +16,6 @@ const useUser = () => {
   const { data, error } = useQuery(ME_QUERY, {
     skip: !hasToken, // 로그인이 되어있지 않는 경우 실행하지 않음
   });
-  console.log("my profile data : ", data, error);
 
   // data 출력시 data = null, 백엔드에서 값을 가져오지 못하는 상황 (client에서 활용하지 못하는 상황)
   // 백엔드에서 token 유효하지 않는 경우 null 반환 => useEffect 사용
@@ -29,7 +28,7 @@ const useUser = () => {
       logUserOut();
     }
   });
-  return;
+  return { data };
 };
 
 export default useUser;

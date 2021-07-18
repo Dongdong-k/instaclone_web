@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { isLoggedInVar } from "../apollo";
 import routes from "../routes";
+import Avatar from "./Avatar";
 import useUser from "./hooks/useUser";
 
 const SHeader = styled.header`
@@ -29,6 +30,11 @@ const Wrapper = styled.div`
 
 const Column = styled.div``;
 
+const IConContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Icon = styled.span`
   margin-left: 15px;
 `;
@@ -43,7 +49,7 @@ const Button = styled.span`
 
 const Header = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
-  const loggedInUser = useUser();
+  const { data } = useUser(); // User data를 어느 곳에서나 불러와서 사용 가능
   return (
     <SHeader>
       <Wrapper>
@@ -53,7 +59,7 @@ const Header = () => {
         <Column>
           {isLoggedIn ? (
             // 여러 요소들을 반환하고 싶으면 상위 tag <></> 로 감싸줘야함.(Component를 반환해야 함)
-            <>
+            <IConContainer>
               <Icon>
                 <FontAwesomeIcon icon={faHome} size="lg" />
               </Icon>
@@ -61,9 +67,13 @@ const Header = () => {
                 <FontAwesomeIcon icon={faCompass} size="lg" />
               </Icon>
               <Icon>
-                <FontAwesomeIcon icon={faUser} size="lg" />
+                {data?.me?.avatar ? (
+                  <Avatar url={data?.me?.avatar} />
+                ) : (
+                  <FontAwesomeIcon icon={faUser} size="lg" />
+                )}
               </Icon>
-            </>
+            </IConContainer>
           ) : (
             <Link to={routes.home}>
               <Button>Log In</Button>
