@@ -4,9 +4,9 @@ import {
   faComment,
   faHeart,
   faPaperPlane,
-  faThumbsUp,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { logUserOut } from "../apollo";
@@ -28,6 +28,7 @@ const FEED_QUERY = gql`
       comments
       createdAt
       isMine
+      isLiked
     }
   }
 `;
@@ -61,7 +62,9 @@ const PhotoActions = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  svg {
+    font-size: 20px;
+  }
   div {
     display: flex;
     align-items: center;
@@ -96,17 +99,20 @@ const Home = () => {
             <PhotoActions>
               <div>
                 <PhotoAction>
-                  <FontAwesomeIcon icon={faHeart} size="2x" />
+                  <FontAwesomeIcon
+                    style={{ color: photo.isLiked ? "red" : "inherit" }}
+                    icon={photo.isLiked ? SolidHeart : faHeart}
+                  />
                 </PhotoAction>
                 <PhotoAction>
-                  <FontAwesomeIcon icon={faComment} size="2x" />
+                  <FontAwesomeIcon icon={faComment} />
                 </PhotoAction>
                 <PhotoAction>
-                  <FontAwesomeIcon icon={faPaperPlane} size="2x" />
+                  <FontAwesomeIcon icon={faPaperPlane} />
                 </PhotoAction>
               </div>
               <div>
-                <FontAwesomeIcon icon={faBookmark} size="2x" />
+                <FontAwesomeIcon icon={faBookmark} />
               </div>
             </PhotoActions>
             <Likes>
