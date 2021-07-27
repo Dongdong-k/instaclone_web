@@ -1,4 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
+import {
+  faBookmark,
+  faComment,
+  faHeart,
+  faPaperPlane,
+  faThumbsUp,
+} from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { logUserOut } from "../apollo";
@@ -25,17 +33,48 @@ const FEED_QUERY = gql`
 `;
 
 const PhotoContainer = styled.div`
+  background-color: white;
   margin-bottom: 20px;
   border: 1px solid ${(props) => props.theme.borderColor};
+  max-width: 615px;
 `;
 const PhotoHeader = styled.div`
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 15px;
 `;
 
 const Username = styled(FatText)`
-  margin-left: 10px;
+  margin-left: 15px;
+`;
+
+const PhotoImage = styled.img`
+  min-width: 100%;
+  max-width: 100%;
+`;
+
+const PhotoData = styled.div`
+  padding: 15px;
+`;
+
+const PhotoActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const PhotoAction = styled.div`
+  margin-right: 10px;
+`;
+
+const Likes = styled(FatText)`
+  display: block;
+  margin-top: 15px;
 `;
 
 const Home = () => {
@@ -49,9 +88,31 @@ const Home = () => {
       {data?.seeFeed?.map((photo: any) => (
         <PhotoContainer key={photo.id}>
           <PhotoHeader>
-            <Avatar url={photo.user.avatar} />
+            <Avatar url={photo.user.avatar} lg={true} />
             <Username>{photo.user.userName}</Username>
           </PhotoHeader>
+          <PhotoImage src={photo.file} />
+          <PhotoData>
+            <PhotoActions>
+              <div>
+                <PhotoAction>
+                  <FontAwesomeIcon icon={faHeart} size="2x" />
+                </PhotoAction>
+                <PhotoAction>
+                  <FontAwesomeIcon icon={faComment} size="2x" />
+                </PhotoAction>
+                <PhotoAction>
+                  <FontAwesomeIcon icon={faPaperPlane} size="2x" />
+                </PhotoAction>
+              </div>
+              <div>
+                <FontAwesomeIcon icon={faBookmark} size="2x" />
+              </div>
+            </PhotoActions>
+            <Likes>
+              {photo.likes === 1 ? "1 like" : `${photo.likes} likes`}
+            </Likes>
+          </PhotoData>
         </PhotoContainer>
       ))}
       <button onClick={() => logUserOut(history)}>Log out now!</button>

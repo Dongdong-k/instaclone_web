@@ -44,7 +44,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      token: localStorage.getItem(TOKEN), // 백엔드에 설정된 token 이름으로 저장하기
+      token: localStorage.getItem(TOKEN), // 백엔드에 설정된 token
     },
   };
 });
@@ -62,7 +62,7 @@ export const disableDarkMode = () => {
   darkModeVar(false);
 };
 
-// 백엔드와 프런트엔드 연결하기
+// 프런트엔드에 백엔드 값(token) 연결하기
 export const client = new ApolloClient({
   // Cache : Apollo에서 가져온 정보를 기억
   link: authLink.concat(httpLink),
