@@ -4,7 +4,7 @@ import { logUserOut } from "../apollo";
 import Photo from "../components/Feed/Photo";
 import PageTitle from "../components/PageTitle";
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
       id

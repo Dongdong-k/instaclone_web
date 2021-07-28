@@ -10,6 +10,7 @@ import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
 import { FatText } from "../shared";
 import { gql, useMutation } from "@apollo/client";
+import { FEED_QUERY } from "../../screens/Home";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -84,6 +85,7 @@ const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
     TOGGLE_LIKE_MUTATION,
     {
       variables: { id }, // mutation 필요로 하는 인자들 불러오기
+      refetchQueries: [{ query: FEED_QUERY }], //Query refetch : query를 다시 실행하는 의미
     }
   );
   console.log(id);
