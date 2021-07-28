@@ -10,7 +10,6 @@ import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
 import { FatText } from "../shared";
 import { gql, useMutation } from "@apollo/client";
-import { FEED_QUERY } from "../../screens/Home";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -81,14 +80,34 @@ interface IPhoto {
 }
 
 const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
+  // cache update를 위한 변수 생성
+  const updateToggleLike = (cache: any, result: any) => {
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+    if (ok) {
+      cache.writeFragment({
+        id: `Photo:${id}`,
+        fragment: gql`
+          fragment BullShitName on Photo {
+            isLiked
+          }
+        `,
+        data: {
+          isLiked: !isLiked, //Feed data와 반대로 변경되므로
+        },
+      });
+    }
+  };
   const [toggleLikeMutation, { loading, data }] = useMutation(
     TOGGLE_LIKE_MUTATION,
     {
       variables: { id }, // mutation 필요로 하는 인자들 불러오기
-      refetchQueries: [{ query: FEED_QUERY }], //Query refetch : query를 다시 실행하는 의미
+      update: updateToggleLike,
     }
   );
-  console.log(id);
   return (
     <PhotoContainer key={id}>
       <PhotoHeader>
