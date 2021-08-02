@@ -77,9 +77,45 @@ interface IPhoto {
   file?: string;
   isLiked: boolean;
   likes: number;
+  caption?: string;
+  commentNumber: number;
+  comments?: {
+    id: number;
+    user: {
+      userName: string;
+      avatar?: string;
+    };
+    payload: string;
+    isMine: boolean;
+    createdAt: string;
+  };
 }
 
-const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
+const Comments = styled.div`
+  margin-top: 20px;
+`;
+const Comment = styled.div``;
+const CommentCaption = styled.span`
+  margin-left: 10px;
+`;
+
+const CommentCount = styled.span`
+  opacity: 0.6;
+  margin-top: 10px;
+  display: block; // margin top 적용시 반응 없음 => block 형태로 바꿔주기
+  font-size: 10px;
+  font-weight: 600;
+`;
+
+const Photo = ({
+  id,
+  user,
+  file,
+  isLiked,
+  likes,
+  caption,
+  commentNumber,
+}: IPhoto) => {
   // cache update를 위한 변수 생성
   const updateToggleLike = (cache: any, result: any) => {
     const {
@@ -157,6 +193,15 @@ const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
           </div>
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
+        <Comments>
+          <Comment>
+            <FatText>{user.userName}</FatText>
+            <CommentCaption>{caption}</CommentCaption>
+          </Comment>
+          <CommentCount>
+            {commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
+          </CommentCount>
+        </Comments>
       </PhotoData>
     </PhotoContainer>
   );
