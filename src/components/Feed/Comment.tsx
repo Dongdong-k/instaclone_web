@@ -1,3 +1,5 @@
+import React from "react";
+import { Link } from "react-router-dom";
 import sanitizeHtml from "sanitize-html";
 import styled from "styled-components";
 import { FatText } from "../shared";
@@ -9,7 +11,7 @@ const CommentContainer = styled.div`
 `;
 const CommentCaption = styled.span`
   margin-left: 10px;
-  mark {
+  a {
     background-color: inherit;
     color: ${(props) => props.theme.accent};
     cursor: pointer;
@@ -25,20 +27,22 @@ interface CommentInterface {
 }
 
 const Comment = ({ author, payload }: CommentInterface) => {
-  const cleanedPayload = payload
-    ? sanitizeHtml(payload?.replace(/#[\w]+/g, "<mark>$&</mark>"), {
-        allowedTags: ["mark"],
-      })
-    : undefined;
   return (
     <CommentContainer>
       <FatText>{author}</FatText>
       {/* <CommentCaption>{payload ? payload : null}</CommentCaption> */}
-      <CommentCaption
-        dangerouslySetInnerHTML={
-          cleanedPayload ? { __html: cleanedPayload } : undefined
-        }
-      />
+      <CommentCaption>
+        {payload?.split(" ").map((word, index) =>
+          /#[\w]/.test(word) ? (
+            // key 를 넣어줘야하는데, <> 같은 경우는 key가 없음 => React.Fragment 활용
+            <React.Fragment key={index}>
+              <Link to={`/hashtags/${word}`}>{word}</Link>{" "}
+            </React.Fragment>
+          ) : (
+            <React.Fragment key={index}>{word} </React.Fragment>
+          )
+        )}
+      </CommentCaption>
     </CommentContainer>
   );
 };
