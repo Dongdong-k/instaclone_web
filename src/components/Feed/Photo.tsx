@@ -11,6 +11,7 @@ import Avatar from "../Avatar";
 import { FatText } from "../shared";
 import { gql, useMutation } from "@apollo/client";
 import { seeFeed_seeFeed } from "../../__generated__/seeFeed";
+import Comments from "./Comments";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -67,30 +68,6 @@ const PhotoAction = styled.div`
 const Likes = styled(FatText)`
   display: block;
   margin-top: 15px;
-`;
-
-const Comments = styled.div`
-  margin-top: 20px;
-`;
-const Comment = styled.div`
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-`;
-const CommentCaption = styled.span`
-  margin-left: 10px;
-`;
-
-const CommentCount = styled.span`
-  opacity: 0.6;
-  margin: 10px 0 10px 0;
-  display: block; // margin top 적용시 반응 없음 => block 형태로 바꿔주기
-  font-size: 10px;
-  font-weight: 600;
-`;
-
-const CommentContainer = styled.div`
-  margin-left: 5px;
 `;
 
 const Photo = ({
@@ -181,24 +158,12 @@ const Photo = ({
           </div>
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
-        <Comments>
-          <Comment>
-            <FatText>{user.userName}</FatText>
-            <CommentCaption>{caption}</CommentCaption>
-          </Comment>
-          <CommentCount>
-            {commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
-          </CommentCount>
-          {comments?.map((comment: any) => (
-            <Comment key={comment.id}>
-              <Avatar url={comment.user.avatar} />
-              <CommentContainer>
-                <FatText>{comment.user.userName}</FatText>
-                <CommentCaption>{comment.payload}</CommentCaption>
-              </CommentContainer>
-            </Comment>
-          ))}
-        </Comments>
+        <Comments
+          author={user.userName}
+          caption={caption}
+          commentNumber={commentNumber}
+          comments={comments}
+        />
       </PhotoData>
     </PhotoContainer>
   );
