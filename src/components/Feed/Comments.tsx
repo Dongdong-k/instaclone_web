@@ -29,7 +29,7 @@ const Comments = ({
 }: seeFeedComments) => {
   return (
     <CommentsContainer>
-      <Comment author={author} payload={caption} />
+      <Comment author={author} payload={caption ? caption : null} />
       <CommentCount>
         {commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
       </CommentCount>
