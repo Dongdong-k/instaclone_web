@@ -10,6 +10,7 @@ import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
 import { FatText } from "../shared";
 import { gql, useMutation } from "@apollo/client";
+import { seeFeed_seeFeed } from "../../__generated__/seeFeed";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -68,43 +69,28 @@ const Likes = styled(FatText)`
   margin-top: 15px;
 `;
 
-interface IPhoto {
-  id: number;
-  user: {
-    userName: string;
-    avatar?: string;
-  };
-  file?: string;
-  isLiked: boolean;
-  likes: number;
-  caption?: string;
-  commentNumber: number;
-  comments?: {
-    id: number;
-    user: {
-      userName: string;
-      avatar?: string;
-    };
-    payload: string;
-    isMine: boolean;
-    createdAt: string;
-  };
-}
-
 const Comments = styled.div`
   margin-top: 20px;
 `;
-const Comment = styled.div``;
+const Comment = styled.div`
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+`;
 const CommentCaption = styled.span`
   margin-left: 10px;
 `;
 
 const CommentCount = styled.span`
   opacity: 0.6;
-  margin-top: 10px;
+  margin: 10px 0 10px 0;
   display: block; // margin top 적용시 반응 없음 => block 형태로 바꿔주기
   font-size: 10px;
   font-weight: 600;
+`;
+
+const CommentContainer = styled.div`
+  margin-left: 5px;
 `;
 
 const Photo = ({
@@ -115,8 +101,10 @@ const Photo = ({
   likes,
   caption,
   commentNumber,
-}: IPhoto) => {
+  comments,
+}: seeFeed_seeFeed) => {
   // cache update를 위한 변수 생성
+  console.log(comments);
   const updateToggleLike = (cache: any, result: any) => {
     const {
       data: {
@@ -168,7 +156,7 @@ const Photo = ({
   return (
     <PhotoContainer key={id}>
       <PhotoHeader>
-        <Avatar url={user.avatar} lg={true} />
+        <Avatar url={user?.avatar === null ? "" : user.avatar} lg={true} />
         <Username>{user.userName}</Username>
       </PhotoHeader>
       <PhotoImage src={file} />
@@ -201,6 +189,15 @@ const Photo = ({
           <CommentCount>
             {commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
           </CommentCount>
+          {comments?.map((comment: any) => (
+            <Comment key={comment.id}>
+              <Avatar url={comment.user.avatar} />
+              <CommentContainer>
+                <FatText>{comment.user.userName}</FatText>
+                <CommentCaption>{comment.payload}</CommentCaption>
+              </CommentContainer>
+            </Comment>
+          ))}
         </Comments>
       </PhotoData>
     </PhotoContainer>

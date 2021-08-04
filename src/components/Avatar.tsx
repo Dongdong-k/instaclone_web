@@ -2,7 +2,11 @@ import styled from "styled-components";
 
 // tag 내 임의의 props 설정시 타입 설정 필요
 interface ISavatar {
-  lg?: boolean;
+  lg: boolean | null;
+}
+
+interface IImg {
+  src: string | null;
 }
 
 const SAvatar = styled.div<ISavatar>`
@@ -13,12 +17,12 @@ const SAvatar = styled.div<ISavatar>`
   overflow: hidden;
 `;
 
-const Img = styled.img`
+const Img = styled.img<IImg>`
   max-width: 100%;
 `;
 
 const Avatar = ({ url = "", lg = false }) => {
-  return <SAvatar lg={lg}>{url !== "" ? <Img src={url} /> : null}</SAvatar>;
+  return <SAvatar lg={lg}> {url !== "" ? <Img src={url} /> : null}</SAvatar>;
 };
 
 export default Avatar;
