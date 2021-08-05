@@ -102,13 +102,10 @@ const Photo = ({
       });
     }
   };
-  const [toggleLikeMutation, { loading, data }] = useMutation(
-    TOGGLE_LIKE_MUTATION,
-    {
-      variables: { id }, // mutation 필요로 하는 인자들 불러오기
-      update: updateToggleLike,
-    }
-  );
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
+    variables: { id }, // mutation 필요로 하는 인자들 불러오기
+    update: updateToggleLike,
+  });
   return (
     <PhotoContainer key={id}>
       <PhotoHeader>

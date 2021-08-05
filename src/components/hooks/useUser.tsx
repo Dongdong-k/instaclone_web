@@ -13,7 +13,7 @@ const ME_QUERY = gql`
 
 const useUser = () => {
   const hasToken = useReactiveVar(isLoggedInVar);
-  const { data, error } = useQuery(ME_QUERY, {
+  const { data } = useQuery(ME_QUERY, {
     skip: !hasToken, // 로그인이 되어있지 않는 경우 실행하지 않음
   });
 

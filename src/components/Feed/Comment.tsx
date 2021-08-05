@@ -1,8 +1,16 @@
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { Link } from "react-router-dom";
-import sanitizeHtml from "sanitize-html";
 import styled from "styled-components";
 import { FatText } from "../shared";
+
+const DELETE_COMMENT_MUTATION = gql`
+  mutation deleteComment($id: Int!) {
+    deleteComment(id: $id) {
+      ok
+    }
+  }
+`;
 
 const CommentContainer = styled.div`
   margin-top: 5px;
@@ -24,9 +32,46 @@ const CommentCaption = styled.span`
 interface CommentInterface {
   author: string;
   payload: string | null;
+  id?: number;
+  isMine?: boolean;
+  photoId?: number;
 }
 
-const Comment = ({ author, payload }: CommentInterface) => {
+const Comment = ({
+  id,
+  author,
+  payload,
+  isMine,
+  photoId,
+}: CommentInterface) => {
+  const updateDeleteComment = (cache: any, result: any) => {
+    const {
+      data: {
+        deleteComment: { ok },
+      },
+    } = result;
+    if (ok) {
+      cache.evict({ id: `Comment:${id}` });
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          commentNumber(prev: any) {
+            return prev - 1;
+          },
+        },
+      });
+    }
+  };
+
+  const [deleteCommentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
+    variables: { id },
+    update: updateDeleteComment,
+  });
+
+  const onDeleteClick = () => {
+    deleteCommentMutation();
+  };
+
   return (
     <CommentContainer>
       <FatText>{author}</FatText>
@@ -43,6 +88,7 @@ const Comment = ({ author, payload }: CommentInterface) => {
           )
         )}
       </CommentCaption>
+      {isMine ? <button onClick={onDeleteClick}>❌</button> : null}
     </CommentContainer>
   );
 };
