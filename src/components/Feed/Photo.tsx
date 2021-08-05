@@ -81,7 +81,6 @@ const Photo = ({
   comments,
 }: seeFeed_seeFeed) => {
   // cache update를 위한 변수 생성
-  console.log(comments);
   const updateToggleLike = (cache: any, result: any) => {
     const {
       data: {

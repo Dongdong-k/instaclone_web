@@ -71,6 +71,7 @@ const Comments = ({
       },
     } = result;
     if (ok && userData.me) {
+      // fake Comment 생성하기
       const newComment = {
         __typename: "Comment",
         createdAt: Date.now() + "", //number => string
@@ -81,12 +82,28 @@ const Comments = ({
           ...userData.me,
         },
       };
+      // cache 상에 newCacheComment 생성하기
+      const newCacheComment = cache.writeFragment({
+        fragment: gql`
+          fragment BSName on Comment {
+            id
+            createdAt
+            isMine
+            payload
+            user {
+              userName
+              avatar
+            }
+          }
+        `,
+        data: newComment,
+      });
       cache.modify({
         id: `Photo:${photoId}`,
         fields: {
           comments(prev: any) {
-            // 이전 comment에 new comment 붙이기
-            return [...prev, newComment];
+            // 이전 comment에 newCacheComment 붙이기
+            return [...prev, newCacheComment];
           },
           commentNumber(prev: any) {
             return prev + 1;
