@@ -99,9 +99,6 @@ const Photo = ({
           likes(prev: any) {
             return isLiked ? prev - 1 : prev + 1;
           },
-          // comments(prev:any){
-
-          // }
         },
       });
     }

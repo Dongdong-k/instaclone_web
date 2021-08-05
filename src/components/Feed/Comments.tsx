@@ -2,12 +2,14 @@ import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { seeFeed_seeFeed_comments } from "../../__generated__/seeFeed";
+import useUser from "../hooks/useUser";
 import Comment from "./Comment";
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $payload: String!) {
     createComment(photoId: $photoId, payload: $payload) {
       ok
+      id
       error
     }
   }
@@ -25,6 +27,20 @@ const CommentCount = styled.span`
   font-weight: 600;
 `;
 
+const PostCommentContainer = styled.div`
+  margin-top: 10px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  border-top: 1px solid ${(props) => props.theme.borderColor};
+`;
+
+const PostCommentInput = styled.input`
+  width: 100%;
+  &::placeholder {
+    font-size: 12px;
+  }
+`;
+
 interface seeFeedComments {
   photoId: number;
   author: string;
@@ -40,26 +56,67 @@ const Comments = ({
   commentNumber,
   comments,
 }: seeFeedComments) => {
+  // useUser - commentupdate를 위해 user 데이터 가져오기
+  const { data: userData } = useUser();
+
+  // createComment Mutation 이후 update Function
+  const createCommentUpdates = (cache: any, result: any) => {
+    // payload 값 받아오기
+    const { payload } = getValues();
+    // comment 입력 후 입력창 값 초기화
+    setValue("payload", "");
+    const {
+      data: {
+        createComment: { ok, id },
+      },
+    } = result;
+    if (ok && userData.me) {
+      const newComment = {
+        __typename: "Comment",
+        createdAt: Date.now() + "", //number => string
+        id,
+        isMine: true,
+        payload,
+        user: {
+          ...userData.me,
+        },
+      };
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          comments(prev: any) {
+            // 이전 comment에 new comment 붙이기
+            return [...prev, newComment];
+          },
+          commentNumber(prev: any) {
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
   const [createCommentMutation, { loading }] = useMutation(
-    CREATE_COMMENT_MUTATION
+    CREATE_COMMENT_MUTATION,
+    { update: createCommentUpdates }
   );
 
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, getValues } = useForm();
+  // handleSubmit 경우 createComment 실행함수
   const onValid = (data: any) => {
-    // form 입력된 값을 data argu로 가져올 수 있음
-    console.log(data);
+    // form 입력된 값을 data argu로 가져오기
+    // console.log(data);
     const { payload } = data;
-    // loading
+    // loading 경우 변동없음
     if (loading) {
       return;
     }
+    // loading 아닌 경우 createCommentMutation 실행
     createCommentMutation({
       variables: {
         photoId,
         payload,
       },
     });
-    setValue("payload", "");
   };
   return (
     <CommentsContainer>
@@ -74,9 +131,9 @@ const Comments = ({
           payload={comment.payload}
         />
       ))}
-      <div>
+      <PostCommentContainer>
         <form onSubmit={handleSubmit(onValid)}>
-          <input
+          <PostCommentInput
             {...register("payload", {
               required: "comment is required",
             })}
@@ -84,7 +141,7 @@ const Comments = ({
             placeholder="Please write a comment... "
           />
         </form>
-      </div>
+      </PostCommentContainer>
     </CommentsContainer>
   );
 };
