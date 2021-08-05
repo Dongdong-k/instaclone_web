@@ -99,6 +99,9 @@ const Photo = ({
           likes(prev: any) {
             return isLiked ? prev - 1 : prev + 1;
           },
+          // comments(prev:any){
+
+          // }
         },
       });
     }
@@ -139,6 +142,7 @@ const Photo = ({
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         <Comments
+          photoId={id}
           author={user.userName}
           caption={caption}
           commentNumber={commentNumber}
