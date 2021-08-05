@@ -89,38 +89,18 @@ const Photo = ({
       },
     } = result;
     if (ok) {
-      const fragmentId = `Photo:${id}`;
-      const fragment = gql`
-        fragment BullShitName on Photo {
-          isLiked
-          likes
-        }
-      `;
-      // prop 값을 받을 수 없는 경우 - cache read 활용
-      const result = cache.readFragment({
-        id: fragmentId,
-        fragment,
-      });
-      if ("isLiked" in result && "likes" in result) {
-        const { isLiked: cacheIsLiked, likes: cacheLikes } = result;
-        cache.writeFragment({
-          id: fragmentId,
-          fragment,
-          data: {
-            isLiked: !cacheIsLiked, //Feed data와 반대로 변경되므로
-            likes: cacheIsLiked ? cacheLikes - 1 : cacheLikes + 1, //isLiked 값에 따라 likes 1씩 증감하기
+      const photoId = `Photo:${id}`;
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(prev: any) {
+            return !prev;
           },
-        });
-      }
-      // prop 값을 받을 수 있는 경우
-      // cache.writeFragment({
-      //   id: fragmentId,
-      //   fragment,
-      //   data: {
-      //     isLiked: !isLiked, //Feed data와 반대로 변경되므로
-      //     likes: isLiked ? likes - 1 : likes + 1, //isLiked 값에 따라 likes 1씩 증감하기
-      //   },
-      // });
+          likes(prev: any) {
+            return isLiked ? prev - 1 : prev + 1;
+          },
+        },
+      });
     }
   };
   const [toggleLikeMutation, { loading, data }] = useMutation(
