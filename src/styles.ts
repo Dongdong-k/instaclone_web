@@ -31,5 +31,6 @@ export const GlobalTheme = createGlobalStyle`
    }
    a {
     text-decoration: none; /* link underline delete */
+    color: inherit;
    }
 `;

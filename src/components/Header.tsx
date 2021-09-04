@@ -68,7 +68,9 @@ const Header = () => {
               </Icon>
               <Icon>
                 {data?.me?.avatar ? (
-                  <Avatar url={data?.me?.avatar} />
+                  <Link to={`/users/${data.me.userName}`}>
+                    <Avatar url={data?.me?.avatar} />
+                  </Link>
                 ) : (
                   <FontAwesomeIcon icon={faUser} size="lg" />
                 )}

@@ -74,7 +74,9 @@ const Comment = ({
 
   return (
     <CommentContainer>
-      <FatText>{author}</FatText>
+      <Link to={`/users/${author}`}>
+        <FatText>{author}</FatText>
+      </Link>
       {/* <CommentCaption>{payload ? payload : null}</CommentCaption> */}
       <CommentCaption>
         {payload?.split(" ").map((word, index) =>

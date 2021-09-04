@@ -12,6 +12,7 @@ import { FatText } from "../shared";
 import { gql, useMutation } from "@apollo/client";
 import { seeFeed_seeFeed } from "../../__generated__/seeFeed";
 import Comments from "./Comments";
+import { Link } from "react-router-dom";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -109,8 +110,12 @@ const Photo = ({
   return (
     <PhotoContainer key={id}>
       <PhotoHeader>
-        <Avatar url={user?.avatar === null ? "" : user.avatar} lg={true} />
-        <Username>{user.userName}</Username>
+        <Link to={`/users/${user?.userName}`}>
+          <Avatar url={user?.avatar === null ? "" : user.avatar} lg={true} />
+        </Link>
+        <Link to={`/users/${user?.userName}`}>
+          <Username>{user.userName}</Username>
+        </Link>
       </PhotoHeader>
       <PhotoImage src={file} />
       <PhotoData>

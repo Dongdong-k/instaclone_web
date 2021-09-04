@@ -12,6 +12,7 @@ import { darkTheme, GlobalTheme, lightTheme } from "./styles";
 import routes from "./routes";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "./components/Layout";
+import Profile from "./screens/Profile";
 
 // const Container = styled.div`
 //   background-color: ${(prop) => prop.theme.bgColor};
@@ -59,6 +60,9 @@ function App() {
                   <SignUp />
                 </Route>
               ) : null}
+              <Route path={`/users/:userName`}>
+                <Profile />
+              </Route>
               {/* 없는 페이지 주소 입력시 아래와 같이 출력, 마지막에 입력하기 */}
               <Route>
                 {/* 1안) 404 Not Found 페이지 연결하기 */}
