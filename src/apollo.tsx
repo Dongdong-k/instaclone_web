@@ -66,5 +66,11 @@ export const disableDarkMode = () => {
 export const client = new ApolloClient({
   // Cache : Apollo에서 가져온 정보를 기억
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      User: {
+        keyFields: (obj) => `User:${obj.userName}`,
+      },
+    },
+  }),
 });
