@@ -4,34 +4,26 @@ import { logUserOut } from "../apollo";
 import Photo from "../components/Feed/Photo";
 import PageTitle from "../components/PageTitle";
 import { seeFeed } from "../__generated__/seeFeed";
+import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "./Fragments";
 
 export const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
-      id
+      ...PhotoFragment
       user {
         userName
         avatar
       }
-      file
       caption
-      likes
       comments {
-        id
-        user {
-          userName
-          avatar
-        }
-        payload
-        isMine
-        createdAt
+        ...CommentFragment
       }
-      commentNumber
       createdAt
       isMine
-      isLiked
     }
   }
+  ${PHOTO_FRAGMENT}
+  ${COMMENT_FRAGMENT}
 `;
 
 const Home = () => {

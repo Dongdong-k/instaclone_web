@@ -68,7 +68,7 @@ const Header = () => {
               </Icon>
               <Icon>
                 {data?.me?.avatar ? (
-                  <Link to={`/users/${data.me.userName}`}>
+                  <Link to={`/users/${data?.me?.userName}`}>
                     <Avatar url={data?.me?.avatar} />
                   </Link>
                 ) : (
