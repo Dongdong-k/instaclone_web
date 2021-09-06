@@ -61,7 +61,9 @@ function App() {
                 </Route>
               ) : null}
               <Route path={`/users/:userName`}>
-                <Profile />
+                <Layout>
+                  <Profile />
+                </Layout>
               </Route>
               {/* 없는 페이지 주소 입력시 아래와 같이 출력, 마지막에 입력하기 */}
               <Route>

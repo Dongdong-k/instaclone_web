@@ -53,6 +53,7 @@ const authLink = setContext((_, { headers }) => {
 
 export const darkModeVar = makeVar(Boolean(localStorage.getItem(DARK_MODE))); // 새로고침시에도 값 존재시 다크모드 유지
 
+//다크모드 설정
 export const enableDarkMode = () => {
   localStorage.setItem(DARK_MODE, "enabled");
   darkModeVar(true);
