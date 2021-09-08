@@ -1,9 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/auth/Button";
+import useUser from "../components/hooks/useUser";
 import PageTitle from "../components/PageTitle";
 import { FatText } from "../components/shared";
 import { seeProfileVariables } from "../__generated__/seeProfile";
@@ -131,27 +132,88 @@ const Icon = styled.span`
 const ProfileBtn = styled(Button).attrs({ as: "span" })`
   margin-left: 5px;
   margin-top: 0px;
+  cursor: pointer;
 `;
-
-const getButton = (seeProfile: any) => {
-  const { isMe, isFollowing } = seeProfile;
-  if (isMe) {
-    return <ProfileBtn>Edit Profile</ProfileBtn>;
-  }
-  if (isFollowing) {
-    return <ProfileBtn>UnFollow</ProfileBtn>;
-  } else {
-    return <ProfileBtn>Follow</ProfileBtn>;
-  }
-};
 
 const Profile = () => {
   const { userName } = useParams<seeProfileVariables>();
+  const client = useApolloClient();
   const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
       userName,
     },
   });
+
+  // Follow, UnFollow Mutation
+  // refetchQueries: [{ query: SEE_PROFILE_QUERY, variables: { userName } }] - cache 업데이트(간접)
+  // update, onCompleted&useApolloClient : cache 업데이트(직접)
+  const unfollowUserUpdate = (cache: any, result: any) => {
+    // data로부터 mutation 성공여부 확인하기
+    const {
+      data: {
+        UnfollowUser: { ok },
+      },
+    } = result;
+    if (!ok) {
+      return;
+    }
+    // cache 업데이트
+    cache.modify({
+      id: `User:${userName}`,
+      fields: {
+        isFollowing(prev: any) {
+          return false;
+        },
+        totalFollowers(prev: number) {
+          return prev - 1;
+        },
+      },
+    });
+  };
+  const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: { userName },
+    update: unfollowUserUpdate,
+  });
+  const followUseroCompleted = (data: any) => {
+    // data로부터 mutation 성공여부 확인하기
+    const {
+      followUser: { ok },
+    } = data;
+    if (!ok) {
+      return;
+    }
+    // client로부터 cache 받아오기
+    const { cache } = client;
+    // Cache 업데이트
+    cache.modify({
+      id: `User:${userName}`,
+      fields: {
+        isFollowing(prev: any) {
+          return true;
+        },
+        totalFollowers(prev: number) {
+          return prev + 1;
+        },
+      },
+    });
+  };
+  const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: { userName },
+    onCompleted: followUseroCompleted,
+  });
+
+  const getButton = (seeProfile: any) => {
+    const { isMe, isFollowing } = seeProfile;
+    if (isMe) {
+      return <ProfileBtn>Edit Profile</ProfileBtn>;
+    }
+    if (isFollowing) {
+      return <ProfileBtn onClick={() => unfollowUser()}>UnFollow</ProfileBtn>;
+    } else {
+      return <ProfileBtn onClick={() => followUser()}>Follow</ProfileBtn>;
+    }
+  };
+
   console.log("data", data);
   return (
     <div>

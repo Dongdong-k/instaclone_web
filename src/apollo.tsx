@@ -70,6 +70,7 @@ export const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
       User: {
+        // cache에 표시되는 형식 - Apollo studio 에서 확인가능
         keyFields: (obj) => `User:${obj.userName}`,
       },
     },

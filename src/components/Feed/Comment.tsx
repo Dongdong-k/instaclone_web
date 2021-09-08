@@ -51,7 +51,9 @@ const Comment = ({
       },
     } = result;
     if (ok) {
+      // comment id 삭제
       cache.evict({ id: `Comment:${id}` });
+      // cache 업데이트
       cache.modify({
         id: `Photo:${photoId}`,
         fields: {
