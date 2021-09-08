@@ -137,6 +137,8 @@ const ProfileBtn = styled(Button).attrs({ as: "span" })`
 
 const Profile = () => {
   const { userName } = useParams<seeProfileVariables>();
+  const { data: userData } = useUser();
+  console.log("userData : ", userData);
   const client = useApolloClient();
   const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
@@ -169,6 +171,17 @@ const Profile = () => {
         },
       },
     });
+
+    //MyProfile update
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.userName}`,
+      fields: {
+        totalFollowers(prev: number) {
+          return prev - 1;
+        },
+      },
+    });
   };
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: { userName },
@@ -191,6 +204,17 @@ const Profile = () => {
         isFollowing(prev: any) {
           return true;
         },
+        totalFollowers(prev: number) {
+          return prev + 1;
+        },
+      },
+    });
+
+    //MyProfile update
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.userName}`,
+      fields: {
         totalFollowers(prev: number) {
           return prev + 1;
         },
