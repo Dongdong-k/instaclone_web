@@ -35,7 +35,11 @@ export const DeleteCreateAccountError = () => {
 // client 연결 링크 생성하기
 const httpLink = createHttpLink({
   // uri : GraphQl application 위치 알려주는 기능
-  uri: "http://localhost:4000/graphql/",
+  // Front End 배포시 NODE_ENV 활용
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://instaclone-backend-dongdong.herokuapp.com/graphql"
+      : "http://localhost:4000/graphql/",
 });
 
 // authLink 생성 - token 값 받아서 header에 추가
